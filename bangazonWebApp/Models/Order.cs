@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+/*
+ * Author: Greg Turner
+ * Purpose: Defines the Order Model/Table Properties/Columns
+ */
 
 namespace Bangazon.Models
 {
