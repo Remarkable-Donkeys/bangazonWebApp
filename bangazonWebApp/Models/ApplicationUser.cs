@@ -35,21 +35,21 @@ namespace bangazonWebApp.Models
         public string Phone { get; set; }
 
         //AppUserId is a foreign key in the products table, this collection is for lazy loading of the Products
-        public virtual ICollection<Products> Products { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
 
         //AppUserId is a foreign key in the payments table, this collection is for lazy loading of the Payments
-        public virtual ICollection<Payments> Payments { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
 
         //AppUserId is a foreign key in the orders table, this collection is for lazy loading of the Orders
-        public virtual ICollection<Orders> Orders { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
 
         //Lazy loading Likes and Ratings from ProductsCustomers
-        public virtual ICollection<ProductsCustomers> LikesAndRatings { get; set; }
+        public virtual ICollection<ProductCustomer> LikesAndRatings { get; set; }
 
         //Lazy loading recommenders and recommendees
-        public virtual ICollection<Recommendations> Recommenders { get; set; }
+        public virtual ICollection<Recommendation> Recommenders { get; set; }
 
-        public virtual ICollection<Recommendations> Recommendees { get; set; }
+        public virtual ICollection<Recommendation> Recommendees { get; set; }
 
 
     }
