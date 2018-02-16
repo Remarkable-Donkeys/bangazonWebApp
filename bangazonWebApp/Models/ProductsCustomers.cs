@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+    Author: Jason Figueroa
+    Description: This is the model for the ProductsCustomers Table & Controller
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
