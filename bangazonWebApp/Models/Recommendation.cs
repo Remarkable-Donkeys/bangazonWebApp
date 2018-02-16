@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Author: Jason Figueroa
+// Description: This is the model for the Recommendation Table & Controller
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace bangazonWebApp.Models
 {
-    public class Recommendations
+    public class Recommendation
     {
         [Required]
         public int Id { get; set; }

@@ -1,7 +1,5 @@
-﻿/*
-    Author: Jason Figueroa
-    Description: This is the model for the ProductsCustomers Table & Controller
- */
+﻿// Author: Jason Figueroa
+// Description: This is the model for the ProductCustomer Table & Controller
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace bangazonWebApp.Models
 {
-    public class ProductsCustomer
+    public class ProductCustomer
     {
         [Key]
         public int Id { get; set; }
