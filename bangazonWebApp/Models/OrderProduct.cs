@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using bangazonWebApp.Models;
 /*
- * Author: Greg Turner
- * Purpose: Defines the OrderProduct Model/JoinerTable Properties/Columns
- */
+* Author: Greg Turner
+* Purpose: Defines the OrderProduct Model/JoinerTable Properties/Columns
+*/
 
 namespace Bangazon.Models
 {
