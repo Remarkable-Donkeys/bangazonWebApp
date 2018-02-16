@@ -1,5 +1,6 @@
 ﻿// beautifully authored by Jesse Page
 
+using Bangazon.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
