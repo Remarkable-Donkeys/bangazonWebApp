@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace bangazonWebApp.Models
@@ -38,7 +39,7 @@ namespace bangazonWebApp.Models
         public virtual ICollection<Product> Products { get; set; }
 
         //AppUserId is a foreign key in the payments table, this collection is for lazy loading of the Payments
-        public virtual ICollection<Payment> Payments { get; set; }
+        public virtual ICollection<PaymentType> Payments { get; set; }
 
         //AppUserId is a foreign key in the orders table, this collection is for lazy loading of the Orders
         public virtual ICollection<Order> Orders { get; set; }
