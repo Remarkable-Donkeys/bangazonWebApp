@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace bangazonWebApp.Models
 {
-    public class Products
+    public class Product
     {
         [Key]
         public int Id { get; set; }
@@ -22,7 +22,7 @@ namespace bangazonWebApp.Models
         [Required]
         [Display(Name = "Product Category")]
         public string CategoryId { get; set; }
-        public Categories Categories { get; set; }
+        public Category Category { get; set; }
 
         [Required]
         public bool Status { get; set; }
@@ -53,10 +53,10 @@ namespace bangazonWebApp.Models
         [Display(Name = "Local Delivery Available?")]
         public bool DeliverLocal { get; set; }
 
-        public virtual ICollection<OrdersProducts> OrdersProducts { get; set; }
+        public virtual ICollection<OrderProduct> OrderProduct { get; set; }
 
-        public virtual ICollection<Recommendations> Recommendations { get; set; }
+        public virtual ICollection<Recommendation> Recommendation { get; set; }
 
-        public virtual ICollection<ProductsCustomers> ProductsCustomers { get; set; }
+        public virtual ICollection<ProductCustomer> ProductCustomer { get; set; }
     }
 }
