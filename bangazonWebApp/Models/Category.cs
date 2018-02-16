@@ -15,5 +15,7 @@ namespace bangazonWebApp.Models
 
         [Required]
         public string CategoryType { get; set; }
+
+        public virtual ICollection<Product> Product { get; set; }
     }
 }
