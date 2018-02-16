@@ -1,4 +1,7 @@
-﻿using System;
+﻿//author: Kristen Norris
+//purpose: created model for Payment Types
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
