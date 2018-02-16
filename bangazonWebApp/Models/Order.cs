@@ -7,7 +7,7 @@ using bangazonWebApp.Models;
 * Purpose: Defines the Order Model/Table Properties/Columns
 */
 
-namespace Bangazon.Models
+namespace bangazonWebApp.Models
 {
     public class Order
     {

@@ -5,7 +5,7 @@ using bangazonWebApp.Models;
 * Purpose: Defines the OrderProduct Model/JoinerTable Properties/Columns
 */
 
-namespace Bangazon.Models
+namespace bangazonWebApp.Models
 {
     public class OrderProduct
     {
