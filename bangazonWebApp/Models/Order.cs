@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using bangazonWebApp.Models;
 /*
- * Author: Greg Turner
- * Purpose: Defines the Order Model/Table Properties/Columns
- */
+* Author: Greg Turner
+* Purpose: Defines the Order Model/Table Properties/Columns
+*/
 
 namespace Bangazon.Models
 {
@@ -17,7 +18,7 @@ namespace Bangazon.Models
         public ApplicationUser User { get; set; }
 
         public int PaymentId { get; set; }
-        public Payment Payment { get; set; }
+        public PaymentType PaymentType { get; set; }
         
 
         [Required]
