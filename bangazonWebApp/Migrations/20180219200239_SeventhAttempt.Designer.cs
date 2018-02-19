@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace bangazonWebApp.Data.Migrations
+namespace bangazonWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180219165357_SixthAttempt")]
-    partial class SixthAttempt
+    [Migration("20180219200239_SeventhAttempt")]
+    partial class SeventhAttempt
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -111,13 +111,13 @@ namespace bangazonWebApp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("DateClosed");
+                    b.Property<DateTime?>("DateClosed");
 
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<int>("PaymentId");
+                    b.Property<int?>("PaymentId");
 
                     b.Property<int?>("PaymentTypeId");
 
@@ -229,11 +229,11 @@ namespace bangazonWebApp.Data.Migrations
                     b.Property<string>("ApplicationUserId")
                         .IsRequired();
 
-                    b.Property<bool>("LikeStatus");
+                    b.Property<bool?>("LikeStatus");
 
                     b.Property<int>("ProductId");
 
-                    b.Property<int>("Rating");
+                    b.Property<int?>("Rating");
 
                     b.HasKey("Id");
 

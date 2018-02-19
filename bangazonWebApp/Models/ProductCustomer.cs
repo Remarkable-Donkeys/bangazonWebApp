@@ -14,9 +14,9 @@ namespace bangazonWebApp.Models
         [Key]
         public int Id { get; set; }
 
-        public bool LikeStatus { get; set; }
+        public bool? LikeStatus { get; set; }
 
-        public int Rating { get; set; }
+        public int? Rating { get; set; }
 
         [Required]
         public int ProductId { get; set; }

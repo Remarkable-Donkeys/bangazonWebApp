@@ -5,19 +5,6 @@
     <UserSecretsId>aspnet-bangazonWebApp-C30D93B2-32F0-41E0-BBE6-9048E698C61F</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Data\Migrations\20180219160604_InitialCreate.cs" />
-    <Compile Remove="Data\Migrations\20180219160604_InitialCreate.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180219161212_SecondAttempt.cs" />
-    <Compile Remove="Data\Migrations\20180219161212_SecondAttempt.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180219162037_ThirdAttempt.cs" />
-    <Compile Remove="Data\Migrations\20180219162037_ThirdAttempt.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180219163858_FourthAttempt.cs" />
-    <Compile Remove="Data\Migrations\20180219163858_FourthAttempt.Designer.cs" />
-    <Compile Remove="Data\Migrations\20180219165037_FifthAttempt.cs" />
-    <Compile Remove="Data\Migrations\20180219165037_FifthAttempt.Designer.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
