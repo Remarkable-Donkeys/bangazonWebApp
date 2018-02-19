@@ -21,7 +21,7 @@ namespace bangazonWebApp.Models
 
         [Required]
         [Display(Name = "Product Category")]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
         public Category Category { get; set; }
 
         [Required]
