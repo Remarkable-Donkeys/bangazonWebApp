@@ -17,7 +17,7 @@ namespace bangazonWebApp.Models
         [Required]
         public ApplicationUser User { get; set; }
 
-        public int PaymentId { get; set; }
+        public int? PaymentId { get; set; }
         public PaymentType PaymentType { get; set; }
         
 
@@ -26,7 +26,7 @@ namespace bangazonWebApp.Models
         public DateTime DateCreated { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime DateClosed { get; set; }
+        public DateTime? DateClosed { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProduct { get; set; }
     }

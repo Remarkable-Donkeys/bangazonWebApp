@@ -47,9 +47,9 @@ namespace bangazonWebApp.Models
         public virtual ICollection<ProductCustomer> LikesAndRatings { get; set; }
 
         //Lazy loading recommenders and recommendees
-        public virtual ICollection<Recommendation> Recommenders { get; set; }
+        //public virtual ICollection<Recommendation> Recommenders { get; set; }
 
-        public virtual ICollection<Recommendation> Recommendees { get; set; }
+        //public virtual ICollection<Recommendation> Recommendees { get; set; }
 
 
     }
