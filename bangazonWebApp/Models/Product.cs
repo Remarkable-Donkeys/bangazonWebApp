@@ -32,7 +32,7 @@ namespace bangazonWebApp.Models
         public double Price { get; set; }
 
         [Required]
-        [DataType(DataType.Date)]
+        //[DataType(DataType.Date)]
         public DateTime DateCreated { get; set; }
 
         [Required]
