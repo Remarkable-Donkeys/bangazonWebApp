@@ -1,3 +1,5 @@
+// Author: Jason Figueroa
+// Purpose: Seeds products & categories to their respective tables in db
 
 /*****************************************************************/
 /* If seeded data is no longer required this file can be deleted */
