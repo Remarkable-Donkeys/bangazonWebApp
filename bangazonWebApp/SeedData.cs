@@ -65,7 +65,7 @@ namespace bangazonWebApp
                 context.Product.Add(new Product
                 {
                     User = user1,
-                    Name = "Knit Hat",
+                    Name = "Knit Scarf",
                     Description = "A beautifully knitted scarf for a toddler girl.",
                     CategoryId = productCategoryId,
                     Status = true,
@@ -81,7 +81,7 @@ namespace bangazonWebApp
                 context.Product.Add(new Product
                 {
                     User = user1,
-                    Name = "Knit Hat",
+                    Name = "Knit Mittens",
                     Description = "Beautifully knitted mittens for a toddler girl.",
                     CategoryId = productCategoryId,
                     Status = true,
