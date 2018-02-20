@@ -10,9 +10,12 @@ using Microsoft.EntityFrameworkCore;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bangazonWebApp.Controllers
 {
+    //ensures that user is authorized before being able to access the Payment Type page
+    [Authorize]
     public class PaymentTypeController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

@@ -5,9 +5,6 @@
     ViewData["Title"] = "Payments";
 }
 
-@if (SignInManager.IsSignedIn(User))
-{
-
 
 <h2>Payment Types</h2>
 
@@ -43,6 +40,3 @@
         }
     </tbody>
 </table>
-} else {
-    <h2>You must log in to access this page</h2>
-}
