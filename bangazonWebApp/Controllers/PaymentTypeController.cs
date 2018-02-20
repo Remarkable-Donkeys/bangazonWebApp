@@ -34,26 +34,12 @@ namespace bangazonWebApp.Controllers
         // GET: PaymentTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PaymentType.ToListAsync());
+            ApplicationUser _user = await GetCurrentUserAsync();
+            List<PaymentType> userPayments = await _context.PaymentType.Where(p => p.User == _user).ToListAsync();
+            return View(userPayments);
+
         }
 
-        // GET: PaymentTypes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var paymentType = await _context.PaymentType
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (paymentType == null)
-            {
-                return NotFound();
-            }
-
-            return View(paymentType);
-        }
 
         // GET: PaymentTypes/Create
         public IActionResult Create()
@@ -79,7 +65,7 @@ namespace bangazonWebApp.Controllers
                     currently authenticated user and assign it to the 
                     product before adding it to the db _context
                 */
-                var user = await GetCurrentUserAsync();
+                ApplicationUser user = await GetCurrentUserAsync();
                 paymentType.User = user;
 
                 _context.Add(paymentType);
