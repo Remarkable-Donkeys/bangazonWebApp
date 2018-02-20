@@ -37,7 +37,7 @@ namespace bangazonWebApp.Controllers
             //gets the current user
             ApplicationUser _user = await GetCurrentUserAsync();
             //only returns the payment types for the current user
-            List<PaymentType> userPayments = await _context.PaymentType.Where(p => p.User == _user).ToListAsync();
+            List<PaymentType> userPayments = await _context.PaymentType.Where(p => p.User == _user && p.Active == true).ToListAsync();
             return View(userPayments);
 
         }
