@@ -34,8 +34,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @*search bar and buttons only revealed to authenticated users - contributor Greg Turner*@
                     @if (SignInManager.IsSignedIn(User))
                     {
+                        @*search on left of navbar - contributor Greg Turner*@
                         <div class="navbar-left" style="margin-top:8px;">
                             @using (Html.BeginForm("Index", "Search", FormMethod.Get))
                             {
