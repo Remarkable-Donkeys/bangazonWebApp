@@ -7,22 +7,31 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace bangazonWebApp.Controllers
 {
     public class MyAccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public MyAccountController(ApplicationDbContext context)
+        private ApplicationDbContext _context;
+        public MyAccountController(ApplicationDbContext ctx, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _userManager = userManager;
+            _context = ctx;
         }
+
+        // This task retrieves the currently authenticated user
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
 
         // GET: MyAccount
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ApplicationUser.ToListAsync());
+            // Get current user
+            var user = await GetCurrentUserAsync();
+            return View(user);
         }
 
         // GET: MyAccount/Details/5
