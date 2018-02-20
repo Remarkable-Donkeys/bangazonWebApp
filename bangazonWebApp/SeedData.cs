@@ -131,10 +131,7 @@ namespace bangazonWebApp
                     State = "TN",
                     DeliverLocal = false,
                 });
-
                 
-                //context.Product.Add(new Product { CustomerId = customerId, Description = "A beautiful oil painting a cafe in Paris.", Name = "Paris Cafe Painting", Price = 350.00, ProductCategoryId = productCategoryId, Quantity = 1 });
-
                 context.SaveChanges();
             }
         }
