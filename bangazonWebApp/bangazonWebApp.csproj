@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-bangazonWebApp-C30D93B2-32F0-41E0-BBE6-9048E698C61F</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\PaymentType\Details.cshtml" />
+    <Content Remove="Views\PaymentType\Edit.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
