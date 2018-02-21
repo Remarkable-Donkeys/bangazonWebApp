@@ -22,7 +22,8 @@ namespace bangazonWebApp.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Include(p => p.Category);
+            var applicationDbContext = _context.Product.Where<>.Include(p => p.Category);
+
             return View(await applicationDbContext.ToListAsync());
         }
 
