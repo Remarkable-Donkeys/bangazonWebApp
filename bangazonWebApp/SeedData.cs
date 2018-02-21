@@ -26,12 +26,12 @@ namespace bangazonWebApp
             /**************************/
             /* Seeding Category Table */
             /**************************/
-            if (!context.CategoryType.Any())
+            if (!context.Category.Any())
             {
-                context.CategoryType.Add(new Category { CategoryType = "Jewelry & Accessories" });
-                context.CategoryType.Add(new Category { CategoryType = "Clothing & Shoes" });
-                context.CategoryType.Add(new Category { CategoryType = "Home & Living" });
-                context.CategoryType.Add(new Category { CategoryType = "Arts & Collectibles" });
+                context.Category.Add(new Category { CategoryType = "Jewelry & Accessories" });
+                context.Category.Add(new Category { CategoryType = "Clothing & Shoes" });
+                context.Category.Add(new Category { CategoryType = "Home & Living" });
+                context.Category.Add(new Category { CategoryType = "Arts & Collectibles" });
 
                 context.SaveChanges();
             }
@@ -43,7 +43,7 @@ namespace bangazonWebApp
             {
                 ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
                 
-                int productCategoryId = (from ct in context.CategoryType
+                int productCategoryId = (from ct in context.Category
                                          where ct.CategoryType.Equals("Clothing & Shoes")
                                          select ct.Id).Single();
 
@@ -96,7 +96,7 @@ namespace bangazonWebApp
 
                 ApplicationUser user2 = userManager.FindByNameAsync("jdoe@email.com").Result;
 
-                productCategoryId = (from ct in context.CategoryType
+                productCategoryId = (from ct in context.Category
                                          where ct.CategoryType.Equals("Arts & Collectibles")
                                          select ct.Id).Single();
 

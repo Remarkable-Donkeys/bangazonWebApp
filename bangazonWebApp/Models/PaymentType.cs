@@ -24,6 +24,9 @@ namespace bangazonWebApp.Models
         [Required]
         public ApplicationUser User { get; set; }
 
+        [Required]
+        public bool Active { get; set; } = true;
+
 
         public virtual ICollection<Order> Orders { get; set; }
 
