@@ -7,16 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bangazonWebApp.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        // This task retrieves the currently authenticated user
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Products
@@ -48,7 +56,7 @@ namespace bangazonWebApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType");
             return View();
         }
 
@@ -56,16 +64,32 @@ namespace bangazonWebApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product)
         {
+            // Remove the user from the model validation because it is
+            // not information posted in the form
+            ModelState.Remove("User");
+
             if (ModelState.IsValid)
             {
+                /*
+                    If all other properties validation, then grab the 
+                    currently authenticated user and assign it to the 
+                    product before adding it to the db _context
+                */
+                var user = await GetCurrentUserAsync();
+
+                product.User = user;
+
+                // TODO: Add the user to the corresponding property of the product
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
@@ -82,7 +106,7 @@ namespace bangazonWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
@@ -118,7 +142,7 @@ namespace bangazonWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
