@@ -10,6 +10,8 @@ using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace bangazonWebApp.Controllers
 {
@@ -67,7 +69,7 @@ namespace bangazonWebApp.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product, IFormFile file)
         {
             // Remove the user from the model validation because it is
             // not information posted in the form
@@ -85,6 +87,20 @@ namespace bangazonWebApp.Controllers
                 product.User = user;
 
                 // TODO: Add the user to the corresponding property of the product
+
+
+                // Adds the img path to the product
+
+                // full path to file in temp location
+                product.Photo = Path.GetTempFileName();
+
+                    if (file.Length > 0)
+                    {
+                        using (var stream = new FileStream(product.Photo, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
