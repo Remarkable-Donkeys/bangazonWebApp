@@ -101,8 +101,27 @@ namespace bangazonWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var paymentType = await _context.PaymentType.SingleOrDefaultAsync(m => m.Id == id);
-            _context.PaymentType.Remove(paymentType);
+            //gets the list of completed orders that use the payment type the user wants to delete
+            List<Order> paymentOrders = await _context.Order.Where(o => o.PaymentId == id && o.DateClosed != null).ToListAsync();
+            // number of completed orders that use the payment type the user wants to delete
+            int numCompleted = paymentOrders.Count();
+
+            //payment type that user wants to delete
+            PaymentType paymentType = await _context.PaymentType.SingleOrDefaultAsync(m => m.Id == id);
+
+
+            if (numCompleted == 0)
+            {
+                //if there are no completed orders that use this payment type, delete it from the database
+                _context.PaymentType.Remove(paymentType);
+            } else
+            {
+                //if one or more completed orders have used this payment type, set the Active property to false
+                paymentType.Active = false;
+
+            }
+
+            //save changes and return to index
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
