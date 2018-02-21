@@ -48,7 +48,7 @@ namespace bangazonWebApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace bangazonWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
@@ -82,7 +82,7 @@ namespace bangazonWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
@@ -118,7 +118,7 @@ namespace bangazonWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
