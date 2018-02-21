@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
+using Microsoft.AspNetCore.Identity;
 /*
  * Author: Greg Turner
  * Purpose: Methods for manipulating Order data
@@ -16,17 +17,29 @@ namespace bangazonWebApp.Controllers
 {
     public class OrderController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly ApplicationDbContext _context;
 
-        public OrderController(ApplicationDbContext context)
+        // This task retrieves the currently authenticated user
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+
+        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
-        // GET: Order
+        // GET: Order - Contributed by Greg Turner
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Order.ToListAsync());
+            //gets the current user
+            ApplicationUser _user = await GetCurrentUserAsync();
+            //only returns the orders for the current user
+            List<Order> userOrders = await _context.Order.Where(o => o.User == _user).ToListAsync();
+
+            return View(userOrders);
         }
 
         // GET: Order/Details/5
