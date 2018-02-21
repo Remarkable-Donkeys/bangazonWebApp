@@ -36,20 +36,22 @@
                 <ul class="nav navbar-nav">
                     @*search bar and buttons only revealed to authenticated users - contributor Greg Turner*@
                     @if (SignInManager.IsSignedIn(User))
-                    {
-                        @*search on left of navbar - contributor Greg Turner*@
-                        <div class="navbar-left" style="margin-top:8px;">
-                            @using (Html.BeginForm("Index", "Search", FormMethod.Get))
-                            {
-                                <ul class="nav navbar-nav">
-                                    <li>@Html.TextBox("id", ViewBag.CurrentFilter as string)</li>
-                                    <li><input type="submit" value="Search" /></li>
-                                </ul>
-                            }
-                        </div>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Home">My Account</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Home">Shopping Cart</a></li>
-        }
+    {
+                @*search on left of navbar - contributor Greg Turner*@
+                <div class="navbar-left" style="margin-top:8px;">
+                    @using (Html.BeginForm("Index", "Search", FormMethod.Get))
+    {
+                <ul class="nav navbar-nav">
+                    <li>@Html.TextBox("id", ViewBag.CurrentFilter as string)</li>
+                    <li><input type="submit" value="Search" /></li>
+                </ul>
+}
+                </div>
+                <li><a asp-area="" asp-controller="Home" asp-action="Home">Products</a></li>
+                <li><a asp-area="" asp-controller="Categories" asp-action="Index">Categories</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Home">My Account</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Home">Shopping Cart</a></li>
+}
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

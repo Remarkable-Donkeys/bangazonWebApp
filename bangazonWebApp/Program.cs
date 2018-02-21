@@ -37,7 +37,9 @@ namespace bangazonWebApp
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 try
                 {
-                    SeedData.Initialize(services, userManager);
+                    SeedData seed = new SeedData(services, userManager);
+                    seed.Initialize();
+                    //SeedData.Initialize(services, userManager);
                 }
                 catch (Exception ex)
                 {
