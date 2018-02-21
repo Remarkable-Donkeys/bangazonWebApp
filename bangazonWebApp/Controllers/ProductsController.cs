@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 
@@ -159,10 +157,31 @@ namespace bangazonWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Product.Remove(product);
+            //gets the list of orderproducts that contain the product the user wants to delete
+            List<OrderProduct> orderProducts = await _context.OrderProduct.Where(op => op.ProductId == id).ToListAsync();
+            // number of orderproducts that that contain the product the user wants to delete
+            int numOrders = orderProducts.Count();
+
+            //Product that user wants to delete
+            Product product = await _context.Product.SingleOrDefaultAsync(p => p.Id == id);
+
+
+            if (numOrders == 0)
+            {
+                //if there are no orderproducts that contain the product the user wants to delete, delete it from the database
+                _context.Product.Remove(product);
+            }
+            else
+            {
+                //if one or more orderproducts that contain the product the user wants to delete, set the Status property to false
+                product.Status = false;
+
+            }
+
+            //save changes and return to index
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
         }
 
         private bool ProductExists(int id)
