@@ -1,4 +1,7 @@
-﻿using System;
+﻿//author: Kristen Norris
+//purpose: complete an order
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 using Microsoft.AspNetCore.Identity;
-/*
- * Author: Greg Turner
- * Purpose: Methods for manipulating Order data
-*/
+using bangazonWebApp.Models.OrderViewModels;
+
 
 namespace bangazonWebApp.Controllers
 {
@@ -31,34 +32,35 @@ namespace bangazonWebApp.Controllers
             _context = context;
         }
 
-        // GET: Order - Contributed by Greg Turner
+        // GET: Incomplete Order
         public async Task<IActionResult> Index()
         {
             //gets the current user
             ApplicationUser _user = await GetCurrentUserAsync();
-            //only returns the orders for the current user
-            List<Order> userOrders = await _context.Order.Where(o => o.User == _user).ToListAsync();
+            //only returns the user's incomplete order
+            //List<Order> userOrders = await _context.Order.Where(o => o.User == _user && o.DateClosed == null).ToListAsync();
 
-            return View(userOrders);
-        }
-
-        // GET: Order/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order
-                .SingleOrDefaultAsync(m => m.Id == id);
+            Order order = await _context.Order.SingleOrDefaultAsync(o => o.User ==_user && o.DateClosed ==null);
             if (order == null)
             {
-                return NotFound();
+                return View();
             }
+     
+            //gets list of orderproducts on the order
+            List<OrderProduct> orderedProducts = await _context.OrderProduct.Include("Product").Where(op => op.OrderId == order.Id).ToListAsync();
 
-            return View(order);
+            //detailed order view model for imcomplete order
+            OrderDetailViewModel details = new OrderDetailViewModel()
+            {
+                ProductList = orderedProducts,
+                Order = order
+            };
+
+            return View(details);
+      
         }
+
+
 
         // GET: Order/Create
         public IActionResult Create()

@@ -48,8 +48,9 @@
                             }
                         </div>
                         <li><a asp-area="" asp-controller="Home" asp-action="Home">My Account</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Home">Shopping Cart</a></li>
+                        <li><a asp-area="" asp-controller="Order">Shopping Cart</a></li>
         }
+
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
