@@ -26,12 +26,12 @@ namespace bangazonWebApp
             /**************************/
             /* Seeding Category Table */
             /**************************/
-            if (!context.CategoryType.Any())
+            if (!context.Category.Any())
             {
-                context.CategoryType.Add(new Category { CategoryType = "Jewelry & Accessories" });
-                context.CategoryType.Add(new Category { CategoryType = "Clothing & Shoes" });
-                context.CategoryType.Add(new Category { CategoryType = "Home & Living" });
-                context.CategoryType.Add(new Category { CategoryType = "Arts & Collectibles" });
+                context.Category.Add(new Category { CategoryType = "Jewelry & Accessories" });
+                context.Category.Add(new Category { CategoryType = "Clothing & Shoes" });
+                context.Category.Add(new Category { CategoryType = "Home & Living" });
+                context.Category.Add(new Category { CategoryType = "Arts & Collectibles" });
 
                 context.SaveChanges();
             }
@@ -43,7 +43,7 @@ namespace bangazonWebApp
             {
                 ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
                 
-                int productCategoryId = (from ct in context.CategoryType
+                int productCategoryId = (from ct in context.Category
                                          where ct.CategoryType.Equals("Clothing & Shoes")
                                          select ct.Id).Single();
 
@@ -96,7 +96,7 @@ namespace bangazonWebApp
 
                 ApplicationUser user2 = userManager.FindByNameAsync("jdoe@email.com").Result;
 
-                productCategoryId = (from ct in context.CategoryType
+                productCategoryId = (from ct in context.Category
                                          where ct.CategoryType.Equals("Arts & Collectibles")
                                          select ct.Id).Single();
 
@@ -131,8 +131,113 @@ namespace bangazonWebApp
                     State = "TN",
                     DeliverLocal = false,
                 });
-                
+
                 context.SaveChanges();
+            }
+
+            /*************************/
+            /* Seeding Payment Type Table */
+            /*************************/
+            if (!context.PaymentType.Any())
+            {
+                ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
+
+                //payment on a completed order
+                context.PaymentType.Add(new PaymentType
+                {
+                    User = user1,
+                    Name = "Payment 1",
+                    AccountNumber = "18203948",
+                    Active = true
+                });
+                //payment not on any order
+                context.PaymentType.Add(new PaymentType
+                {
+                    User = user1,
+                    Name = "Payment 2",
+                    AccountNumber = "29384059",
+                    Active = true
+                });
+                //payment not on any order
+                context.PaymentType.Add(new PaymentType
+                {
+                    User = user1,
+                    Name = "Payment 3",
+                    AccountNumber = "37485968",
+                    Active = true
+                });
+
+                context.SaveChanges();
+
+            }
+
+            /*************************/
+            /* Seeding Order Type Table */
+            /*************************/
+            if (!context.Order.Any())
+            {
+                ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
+                int payment1Id = (from p in context.PaymentType
+                                  where p.Name.Equals("Payment 1")
+                                  select p.Id).Single();
+                PaymentType payment1 = context.PaymentType.Where(p => p.Id == payment1Id).Single();
+
+                //completed order
+                context.Order.Add(new Order
+                {
+                    User = user1,
+                    PaymentId = payment1Id,
+                    PaymentType = payment1,
+                    DateCreated = DateTime.Now.AddDays(-100),
+                    DateClosed = DateTime.Now.AddDays(-99) 
+                });
+                //incomplete order
+                context.Order.Add(new Order
+                {
+                    User = user1,
+                    DateCreated = DateTime.Now.AddDays(-10),
+                });
+
+                context.SaveChanges();
+
+            }
+            /*************************/
+            /* Seeding OrderProduct Type Table */
+            /*************************/
+            if (!context.OrderProduct.Any())
+            {
+                ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
+                int payment1Id = (from p in context.PaymentType
+                                  where p.Name.Equals("Payment 1")
+                                  select p.Id).Single();
+                int order1Id = (from o in context.Order
+                                  where o.User.Equals(user1) && o.PaymentId.Equals(payment1Id)
+                                  select o.Id).Single();
+                int order2Id = (from o in context.Order
+                                where o.User.Equals(user1) && o.PaymentId == null
+                                select o.Id).Single();
+                int product1Id = (from p in context.Product
+                                where p.Name.Equals("Sunset Painting")
+                                select p.Id).Single();
+                int product2Id = (from p in context.Product
+                                  where p.Name.Equals("Paris Cafe Painting")
+                                  select p.Id).Single();
+
+                //product on completed order
+                context.OrderProduct.Add(new OrderProduct
+                {
+                    OrderId = order1Id,
+                    ProductId = product1Id
+                });
+                //product on incomplete order
+                context.OrderProduct.Add(new OrderProduct
+                {
+                    OrderId = order2Id,
+                    ProductId = product2Id
+                });
+
+                context.SaveChanges();
+
             }
         }
     }

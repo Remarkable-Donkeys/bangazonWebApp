@@ -19,7 +19,7 @@ namespace bangazonWebApp.Data
         public DbSet<Recommendation> Recommendation { get; set; }
         public DbSet<ProductCustomer> ProductCustomer { get; set; }
         public DbSet<Product> Product { get; set; }
-        public DbSet<Category> CategoryType { get; set; }
+        public DbSet<Category> Category { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
