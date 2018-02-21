@@ -102,7 +102,7 @@ namespace bangazonWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryType");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("bangazonWebApp.Models.Order", b =>
@@ -157,6 +157,8 @@ namespace bangazonWebApp.Migrations
 
                     b.Property<string>("AccountNumber")
                         .IsRequired();
+
+                    b.Property<bool>("Active");
 
                     b.Property<string>("Name")
                         .IsRequired()
