@@ -12,11 +12,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace bangazonWebApp.Controllers
 {
     public class ProductsController : Controller
     {
+
+        private IHostingEnvironment _hostingEnvironment;
+
         private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly ApplicationDbContext _context;
@@ -24,10 +28,11 @@ namespace bangazonWebApp.Controllers
         // This task retrieves the currently authenticated user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
-        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment environment)
         {
             _context = context;
             _userManager = userManager;
+            _hostingEnvironment = environment;
         }
 
         // GET: Products
@@ -92,15 +97,21 @@ namespace bangazonWebApp.Controllers
                 // Adds the img path to the product
 
                 // full path to file in temp location
-                product.Photo = Path.GetTempFileName();
 
-                    if (file.Length > 0)
+                //specify the filepath
+                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+                product.Photo = upload;
+
+                if (file.Length > 0)
                     {
-                        using (var stream = new FileStream(product.Photo, FileMode.Create))
+                    var filePath = Path.Combine(upload, file.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
                         {
                             await file.CopyToAsync(stream);
                         }
                     }
+            
 
                 _context.Add(product);
                 await _context.SaveChangesAsync();
