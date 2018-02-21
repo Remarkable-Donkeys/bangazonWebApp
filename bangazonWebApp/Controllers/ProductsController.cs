@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Author: Max Wolf
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -114,9 +115,14 @@ namespace bangazonWebApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product)
         {
+            // Remove the user from the model validation because it is
+            // not information posted in the form
+            ModelState.Remove("User");
+
             if (id != product.Id)
             {
                 return NotFound();
@@ -124,6 +130,17 @@ namespace bangazonWebApp.Controllers
 
             if (ModelState.IsValid)
             {
+                /*
+                   If all other properties validation, then grab the 
+                   currently authenticated user and assign it to the 
+                   product before adding it to the db _context
+               */
+                var user = await GetCurrentUserAsync();
+
+                product.User = user;
+
+                // TODO: Add the user to the corresponding property of the product
+
                 try
                 {
                     _context.Update(product);

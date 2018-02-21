@@ -1,4 +1,4 @@
-﻿// beautifully authored by Jesse Page
+﻿//Author: Max Wolf
 
 using System;
 using System.Collections.Generic;
