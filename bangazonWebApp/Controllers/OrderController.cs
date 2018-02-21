@@ -31,7 +31,7 @@ namespace bangazonWebApp.Controllers
             _context = context;
         }
 
-        // GET: Order
+        // GET: Order - Contributed by Greg Turner
         public async Task<IActionResult> Index()
         {
             //gets the current user

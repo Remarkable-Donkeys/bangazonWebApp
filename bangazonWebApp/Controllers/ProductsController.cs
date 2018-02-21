@@ -26,7 +26,7 @@ namespace bangazonWebApp.Controllers
             _context = context;
         }
 
-        // GET: Products
+        // GET: Products - Contributed by Greg Turner
         public async Task<IActionResult> Index()
         {
             //gets the current user
@@ -35,6 +35,15 @@ namespace bangazonWebApp.Controllers
             List<Product> userProducts = await _context.Product.Where(p => p.User == _user && p.Status).Include(p => p.Category).ToListAsync();
 
             return View(userProducts);
+        }
+
+        // GET: Products - Contributed by Greg Turner
+        public async Task<IActionResult> Recent()
+        {
+            //only returns the 20 most recently added products that are not status false (inactive)
+            List<Product> recent20 = await _context.Product.Where(p => p.Status).OrderByDescending(p => p.DateCreated).Take(20).ToListAsync();
+
+            return View(recent20);
         }
 
         // GET: Products/Details/5
@@ -152,7 +161,7 @@ namespace bangazonWebApp.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
+        // POST: Products/Delete/5 - Contributed by Greg Turner
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
