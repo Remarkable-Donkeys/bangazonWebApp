@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 
@@ -12,19 +14,29 @@ namespace bangazonWebApp.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        // This task retrieves the currently authenticated user
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Where<>.Include(p => p.Category);
+            //gets the current user
+            ApplicationUser _user = await GetCurrentUserAsync();
+            //only returns the products for the current user that are not status false (inactive) and include the categories
+            List<Product> userProducts = await _context.Product.Where(p => p.User == _user && p.Status == true).Include(p => p.Category).ToListAsync();
 
-            return View(await applicationDbContext.ToListAsync());
+            return View(userProducts);
         }
 
         // GET: Products/Details/5
@@ -49,7 +61,7 @@ namespace bangazonWebApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType");
             return View();
         }
 
@@ -66,7 +78,7 @@ namespace bangazonWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
@@ -83,7 +95,7 @@ namespace bangazonWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
@@ -119,7 +131,7 @@ namespace bangazonWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.CategoryType, "Id", "CategoryType", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "CategoryType", product.CategoryId);
             return View(product);
         }
 
