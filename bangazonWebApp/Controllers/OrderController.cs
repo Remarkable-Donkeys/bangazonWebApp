@@ -53,7 +53,8 @@ namespace bangazonWebApp.Controllers
             OrderDetailViewModel details = new OrderDetailViewModel()
             {
                 ProductList = orderedProducts,
-                Order = order
+                Order = order,
+                OrderSum = orderedProducts.Where(op => op.Product.Status).Sum(op => op.Product.Price)
             };
 
             return View(details);

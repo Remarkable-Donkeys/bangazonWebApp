@@ -9,5 +9,8 @@ namespace bangazonWebApp.Models.OrderViewModels
     {
         public List<OrderProduct> ProductList { get; set; }
         public Order Order { get; set; }
+        public double OrderSum { get; set; }
+
+
     }
 }

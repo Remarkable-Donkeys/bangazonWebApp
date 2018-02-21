@@ -19,40 +19,52 @@ else
 
     <div>
         <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Order.PaymentId)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Order.PaymentId)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Order.DateCreated)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Order.DateCreated)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Order.DateClosed)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Order.DateClosed)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.ProductList)
-            </dt>
-            @foreach (var item in Model.ProductList)
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Products
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ProductList)
             {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Name)
+                    </td>
+                    @if (item.Product.Status)
+                    {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Price)
+                    </td>
+                    } else
+                    {
+                        <td>
+                            Product No Longer Available
+                         </td>
 
-                <dd>
-                    @Html.DisplayFor(modelItem => item.Product.Name)
-                </dd>
-            }
-        </dl>
+                    }
+                </tr>
+        }
+            </tbody>
+        </table>
 
+        <p>@Html.DisplayFor(model => model.OrderSum)</p>
     </div>
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.Order.Id">Edit</a> |
+        <a asp-action="Edit" asp-route-id="@Model.Order.Id">Complete Order</a> |
     </div>
 
 }
