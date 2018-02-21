@@ -34,7 +34,7 @@ namespace bangazonWebApp.Controllers
             //gets the current user
             ApplicationUser _user = await GetCurrentUserAsync();
             //only returns the products for the current user that are not status false (inactive) and include the categories
-            List<Product> userProducts = await _context.Product.Where(p => p.User == _user && p.Status == true).Include(p => p.Category).ToListAsync();
+            List<Product> userProducts = await _context.Product.Where(p => p.User == _user && p.Status).Include(p => p.Category).ToListAsync();
 
             return View(userProducts);
         }
