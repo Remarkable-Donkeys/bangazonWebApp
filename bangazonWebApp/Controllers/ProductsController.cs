@@ -96,12 +96,14 @@ namespace bangazonWebApp.Controllers
 
                 // Adds the img path to the product
 
-                // full path to file in temp location
-
                 //specify the filepath
                 var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
 
-                product.Photo = upload;
+                //store the relative filepath in the database for use as the src of img in view
+                product.Photo = Path.Combine(
+                    "images/",
+                    file.FileName
+                );
 
                 if (file.Length > 0)
                     {
