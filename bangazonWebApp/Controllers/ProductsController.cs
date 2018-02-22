@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
+using bangazonWebApp.Models.ProductViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bangazonWebApp.Controllers
 {
@@ -47,6 +49,7 @@ namespace bangazonWebApp.Controllers
         }
 
         // GET: Products/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -196,6 +199,25 @@ namespace bangazonWebApp.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> Categories()
+        {
+            var model = new CategorizedProductsViewModel();
+
+            model.CategorizedProducts = await (
+                from c in _context.Category
+                join p in _context.Product
+                on c.Id equals p.CategoryId
+                group new { c, p } by new { c.Id, c.CategoryType } into grouped
+                select new CategorizedProducts
+                {
+                    CategoryId = grouped.Key.Id,
+                    CategoryName = grouped.Key.CategoryType,
+                    ProductCount = grouped.Select(x => x.p.Id).Count(),
+                    Products = grouped.Select(x => x.p).Take(3)
+                }).ToListAsync();
+            return View(model);
         }
     }
 }
