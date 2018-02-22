@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 using bangazonWebApp.Models.ProductViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bangazonWebApp.Controllers
 {
@@ -48,6 +49,7 @@ namespace bangazonWebApp.Controllers
         }
 
         // GET: Products/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
