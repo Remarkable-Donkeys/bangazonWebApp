@@ -30,7 +30,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">bangazonWebApp</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">bangazonWebApp</a>                
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -47,10 +47,16 @@
                                 </ul>
                             }
                         </div>
+<<<<<<< HEAD
                         <li><a asp-area="" asp-controller="Home" asp-action="Home">My Account</a></li>
                         <li><a asp-area="" asp-controller="Order">Shopping Cart</a></li>
         }
 
+=======
+                        <li><a asp-area="" asp-controller="MyAccount" asp-action="Index">My Account</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Home">Shopping Cart</a></li>
+                    }
+>>>>>>> Development
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

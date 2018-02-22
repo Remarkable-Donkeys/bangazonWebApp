@@ -94,6 +94,42 @@ namespace bangazonWebApp
                     DeliverLocal = false,
                 });
 
+                productCategoryId = (from ct in context.Category
+                                     where ct.CategoryType.Equals("Jewelry & Accessories")
+                                     select ct.Id).Single();
+
+                context.Product.Add(new Product
+                {
+                    User = user1,
+                    Name = "Beaded Bracelet",
+                    Description = "A beautiful handmade beaded bracelet.",
+                    CategoryId = productCategoryId,
+                    Status = true,
+                    Price = 28.50,
+                    DateCreated = DateTime.Now,
+                    Quantity = 6,
+                    Photo = "",
+                    City = "Nashville",
+                    State = "TN",
+                    DeliverLocal = false,
+                });
+
+                context.Product.Add(new Product
+                {
+                    User = user1,
+                    Name = "Charm Bracelet",
+                    Description = "A beautiful handmade charm bracelet.",
+                    CategoryId = productCategoryId,
+                    Status = true,
+                    Price = 42.00,
+                    DateCreated = DateTime.Now,
+                    Quantity = 3,
+                    Photo = "",
+                    City = "Nashville",
+                    State = "TN",
+                    DeliverLocal = false,
+                });
+                
                 ApplicationUser user2 = userManager.FindByNameAsync("jdoe@email.com").Result;
 
                 productCategoryId = (from ct in context.Category
@@ -132,12 +168,32 @@ namespace bangazonWebApp
                     DeliverLocal = false,
                 });
 
+                productCategoryId = (from ct in context.Category
+                                     where ct.CategoryType.Equals("Home & Living")
+                                     select ct.Id).Single();
+
+                context.Product.Add(new Product
+                {
+                    User = user2,
+                    Name = "Handmade Quilt",
+                    Description = "A very warm beautifully hand crafted quilt.",
+                    CategoryId = productCategoryId,
+                    Status = true,
+                    Price = 155.25,
+                    DateCreated = DateTime.Now,
+                    Quantity = 1,
+                    Photo = "",
+                    City = "Nashville",
+                    State = "TN",
+                    DeliverLocal = false,
+                });
+
                 context.SaveChanges();
             }
 
-            /*************************/
+            /******************************/
             /* Seeding Payment Type Table */
-            /*************************/
+            /******************************/
             if (!context.PaymentType.Any())
             {
                 ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
@@ -171,9 +227,9 @@ namespace bangazonWebApp
 
             }
 
-            /*************************/
+            /****************************/
             /* Seeding Order Type Table */
-            /*************************/
+            /****************************/
             if (!context.Order.Any())
             {
                 ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
@@ -201,9 +257,9 @@ namespace bangazonWebApp
                 context.SaveChanges();
 
             }
-            /*************************/
+            /***********************************/
             /* Seeding OrderProduct Type Table */
-            /*************************/
+            /***********************************/
             if (!context.OrderProduct.Any())
             {
                 ApplicationUser user1 = userManager.FindByNameAsync("jsmith@email.com").Result;
