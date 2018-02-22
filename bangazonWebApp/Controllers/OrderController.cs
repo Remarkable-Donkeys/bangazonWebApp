@@ -39,6 +39,7 @@ namespace bangazonWebApp.Controllers
         {
             //gets the current user
             ApplicationUser _user = await GetCurrentUserAsync();
+
             //only returns the user's incomplete order
             Order order = await _context.Order.SingleOrDefaultAsync(o => o.User ==_user && o.DateClosed ==null);
             if (order == null)
@@ -113,26 +114,31 @@ namespace bangazonWebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentId,DateCreated")] Order order)
+        public async Task<IActionResult> Edit(int id, PaymentType payment)
         {
-            if (id != order.Id)
-            {
-                return NotFound();
-            }
+            //gets the current user
+            ApplicationUser _user = await GetCurrentUserAsync();
+
+            Order currentOrder = _context.Order.Single(o => o.Id == id);
+            currentOrder.PaymentId = payment.Id;
+            currentOrder.DateClosed = DateTime.Now;
 
             //date closed will be the date the user adds a payment type
-            order.DateClosed = DateTime.Now;
+            
 
-            if (ModelState.IsValid)
+
+            if (currentOrder.PaymentId != null)
             {
                 try
                 {
-                    _context.Update(order);
+                    _context.Update(currentOrder);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.Id))
+                    if (!OrderExists(currentOrder.Id))
                     {
                         return NotFound();
                     }
@@ -141,9 +147,14 @@ namespace bangazonWebApp.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(order);
+
+
+
+            //displays list of payment types
+            PaymentTypeViewModel payList = new PaymentTypeViewModel(_context, _user);
+
+            return View(payList);
         }
 
         // GET: Order/Delete/5
