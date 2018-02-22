@@ -3,19 +3,18 @@
 @model bangazonWebApp.Models.OrderViewModels.OrderDetailViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Shopping Cart";
 }
 
+<h2>Shopping cart</h2>
 @if (Model == null)
 {
-    <h2>Shopping cart</h2>
-    <p>You currently do not have a shopping cart open</p>
-    <a asp-action="Create" >Start New Order</a>
+    <p>Your shopping cart is empty</p>
 
 }
 else
 {
-    <h2>Order @Html.DisplayFor(model => model.Order.Id)</h2>
+    <h3>Order @Html.DisplayFor(model => model.Order.Id)</h3>
 
     <div>
         <hr />
@@ -36,35 +35,40 @@ else
             </thead>
             <tbody>
                 @foreach (var item in Model.ProductList)
-            {
+                {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Product.Name)
                     </td>
                     @if (item.Product.Status)
-                    {
+                     {
                     <td>
                         @Html.DisplayFor(modelItem => item.Product.Quantity)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Product.Price)
                     </td>
-                    } else
+                    }
+                    else
                     {
-                        <td>
-                            Product No Longer Available
-                         </td>
+                    <td>
+                        Product No Longer Available
+                    </td>
 
                     }
                 </tr>
-        }
+                }
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>$@Html.DisplayFor(model => model.OrderSum)</td>
+                </tr>
             </tbody>
         </table>
 
-        <p>@Html.DisplayFor(model => model.OrderSum)</p>
     </div>
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.Order.Id">Complete Order</a> |
+        <a asp-action="Edit" asp-route-id="@Model.Order.Id">Complete Order</a>
     </div>
 
 }

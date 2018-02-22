@@ -12,10 +12,12 @@ using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 using Microsoft.AspNetCore.Identity;
 using bangazonWebApp.Models.OrderViewModels;
-
+using bangazonWebApp.Models.PaymentViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace bangazonWebApp.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -38,15 +40,13 @@ namespace bangazonWebApp.Controllers
             //gets the current user
             ApplicationUser _user = await GetCurrentUserAsync();
             //only returns the user's incomplete order
-            //List<Order> userOrders = await _context.Order.Where(o => o.User == _user && o.DateClosed == null).ToListAsync();
-
             Order order = await _context.Order.SingleOrDefaultAsync(o => o.User ==_user && o.DateClosed ==null);
             if (order == null)
             {
                 return View();
             }
      
-            //gets list of orderproducts on the order
+            //gets list of orderproducts on the order and includes complete product data
             List<OrderProduct> orderedProducts = await _context.OrderProduct.Include("Product").Where(op => op.OrderId == order.Id).ToListAsync();
 
             //detailed order view model for imcomplete order
@@ -98,7 +98,14 @@ namespace bangazonWebApp.Controllers
             {
                 return NotFound();
             }
-            return View(order);
+            //gets the current user
+            ApplicationUser _user = await GetCurrentUserAsync();
+            
+            //displays list of payment types
+            PaymentTypeViewModel payList = new PaymentTypeViewModel(_context, _user);
+
+            //PaymentTypeViewModel droplist = new SelectList(_context.Set<PaymentType>(), "PaymentTypeId", "Name");
+            return View(payList);
         }
 
         // POST: Order/Edit/5
@@ -106,12 +113,15 @@ namespace bangazonWebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentId,DateCreated,DateClosed")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentId,DateCreated")] Order order)
         {
             if (id != order.Id)
             {
                 return NotFound();
             }
+
+            //date closed will be the date the user adds a payment type
+            order.DateClosed = DateTime.Now;
 
             if (ModelState.IsValid)
             {

@@ -1,44 +1,41 @@
-﻿@model bangazonWebApp.Models.Order
-
+﻿@*author: Kristen Norris
+    //purpose: selecting a payment type *@
+@model bangazonWebApp.Models.PaymentViewModels.PaymentTypeViewModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Add Payment";
 }
 
-<h2>Edit</h2>
+<h2>Complete Your Order</h2>
 
-<h4>Order</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="PaymentId" class="control-label"></label>
-                <input asp-for="PaymentId" class="form-control" />
-                <span asp-validation-for="PaymentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" />
-                <span asp-validation-for="DateCreated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateClosed" class="control-label"></label>
-                <input asp-for="DateClosed" class="form-control" />
-                <span asp-validation-for="DateClosed" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+        <form asp-controller="Order" asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.LabelFor(model => model.PaymentType.Id)
+            @Html.DropDownList(
+                     "PaymentType.Id",
+                     @Model.PaymentList,
+                     new
+                     {
+                         @name = "PaymentType.Id",
+                         @class = "form-control"
+                     }
+                 )
+            <span asp-validation-for="@Model.PaymentType.Id" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Complete Order" class="btn btn-default" />
+    </div>
+</form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Cancel</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
