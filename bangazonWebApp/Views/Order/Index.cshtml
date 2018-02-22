@@ -40,7 +40,7 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => item.Product.Name)
                     </td>
-                    @if (item.Product.Status)
+                    @if (item.Product.Status || item.Product.Quantity == 0)
                      {
                     <td>
                         @Html.DisplayFor(modelItem => item.Product.Quantity)

@@ -118,14 +118,27 @@ namespace bangazonWebApp.Controllers
         {
             //gets the current user
             ApplicationUser _user = await GetCurrentUserAsync();
-
+            //gets current order
             Order currentOrder = _context.Order.Single(o => o.Id == id);
+
+            //adds payment to order
             currentOrder.PaymentId = payment.Id;
+            //date closed will be the date the user adds a payment type
             currentOrder.DateClosed = DateTime.Now;
 
-            //date closed will be the date the user adds a payment type
-            
 
+            //gets list of orderproducts on the order and includes complete product data
+            List<OrderProduct> productsOnOrder = await _context.OrderProduct.Include("Product").Where(op => op.OrderId == currentOrder.Id).ToListAsync();
+            //if product is no longer available, delete the OrderProduct relationship so that the product doesn't appear in the order history
+            productsOnOrder.ForEach(op =>
+            {
+                if(op.Product.Status == false || op.Product.Quantity == 0)
+                {
+                    int pId = op.Product.Id;
+                    var product =  _context.OrderProduct.Single(m => m.ProductId == pId);
+                    _context.OrderProduct.Remove(product);
+                }
+            });
 
             if (currentOrder.PaymentId != null)
             {
