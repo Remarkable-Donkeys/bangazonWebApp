@@ -18,12 +18,8 @@
     <div class="row">
         <div class="list-group col-md-4">
             @foreach (var product in category.Products)
-            {
-                // following will be uncommented when we have a valid route and action for a non-logged in detailed view of products
-                @*<a asp-action="Details" asp-route-id="@product.Id" class="list-group-item list-group-item-action">@product.Name</a>*@
-
-                // following is a placeholder
-                <a href="#" class="list-group-item list-group-item-action">@product.Name</a>
+            {                
+                <a asp-action="ProductDetails" asp-route-id="@product.Id" class="list-group-item list-group-item-action">@product.Name</a>                
             }
         </div>
     </div>
