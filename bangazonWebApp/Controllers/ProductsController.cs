@@ -68,6 +68,34 @@ namespace bangazonWebApp.Controllers
             return View(product);
         }
 
+        // GET: Products/ProductDetails/5
+        public async Task<IActionResult> ProductDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ProductDetailViewModel model = new ProductDetailViewModel();
+
+            model.Product = await _context.Product.Where(p => p.Id == id).Take(1).SingleOrDefaultAsync();            
+
+            if (model.Product == null)
+            {
+                return NotFound();
+            }
+
+            Category category = await _context.Category.Where(c => c.Id == model.Product.CategoryId).Take(1).SingleOrDefaultAsync();
+            model.CategoryName = category.CategoryType;
+
+            if (model.CategoryName == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
         // GET: Products/Create
         public IActionResult Create()
         {
