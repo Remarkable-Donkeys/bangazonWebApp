@@ -35,5 +35,7 @@ namespace bangazonWebApp.Data
                 .Property(b => b.DateCreated)
                 .HasDefaultValueSql("GETDATE()");
         }
+
+        public DbSet<bangazonWebApp.Models.ApplicationUser> ApplicationUser { get; set; }
     }
 }
