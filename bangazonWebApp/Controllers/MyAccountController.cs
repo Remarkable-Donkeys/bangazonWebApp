@@ -8,104 +8,96 @@ using Microsoft.EntityFrameworkCore;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
 using Microsoft.AspNetCore.Identity;
-/*
- * Author: Greg Turner
- * Purpose: Methods for manipulating Order data
-*/
 
 namespace bangazonWebApp.Controllers
 {
-    public class OrderController : Controller
+    public class MyAccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
+        public MyAccountController(ApplicationDbContext ctx, UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+            _context = ctx;
+        }
 
         // This task retrieves the currently authenticated user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
 
-        public OrderController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-            _context = context;
-        }
-
-        // GET: Order - Contributed by Greg Turner
+        // GET: MyAccount
         public async Task<IActionResult> Index()
         {
-            //gets the current user
-            ApplicationUser _user = await GetCurrentUserAsync();
-            //only returns the orders for the current user
-            List<Order> userOrders = await _context.Order.Where(o => o.User == _user).ToListAsync();
-
-            return View(userOrders);
+            // Get current user
+            var user = await GetCurrentUserAsync();
+            return View(user);
         }
 
-        // GET: Order/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: MyAccount/Details/5
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order
+            var applicationUser = await _context.ApplicationUser
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (order == null)
+            if (applicationUser == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(applicationUser);
         }
 
-        // GET: Order/Create
+        // GET: MyAccount/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Order/Create
+        // POST: MyAccount/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PaymentId,DateCreated,DateClosed")] Order order)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Street,City,State,Zip,Phone,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                _context.Add(applicationUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(applicationUser);
         }
 
-        // GET: Order/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: MyAccount/Edit/5
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order.SingleOrDefaultAsync(m => m.Id == id);
-            if (order == null)
+            var applicationUser = await _context.ApplicationUser.SingleOrDefaultAsync(m => m.Id == id);
+            if (applicationUser == null)
             {
                 return NotFound();
             }
-            return View(order);
+            return View(applicationUser);
         }
 
-        // POST: Order/Edit/5
+        // POST: MyAccount/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentId,DateCreated,DateClosed")] Order order)
+        public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
-            if (id != order.Id)
+            if (id != applicationUser.Id)
             {
                 return NotFound();
             }
@@ -114,12 +106,14 @@ namespace bangazonWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    _context.Update(applicationUser);
+                    _context.SaveChanges();
+                    RedirectToAction("Detail");
+                   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.Id))
+                    if (!ApplicationUserExists(applicationUser.Id))
                     {
                         return NotFound();
                     }
@@ -130,41 +124,41 @@ namespace bangazonWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(applicationUser);
         }
 
-        // GET: Order/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: MyAccount/Delete/5
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order
+            var applicationUser = await _context.ApplicationUser
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (order == null)
+            if (applicationUser == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(applicationUser);
         }
 
-        // POST: Order/Delete/5
+        // POST: MyAccount/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var order = await _context.Order.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Order.Remove(order);
+            var applicationUser = await _context.ApplicationUser.SingleOrDefaultAsync(m => m.Id == id);
+            _context.ApplicationUser.Remove(applicationUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderExists(int id)
+        private bool ApplicationUserExists(string id)
         {
-            return _context.Order.Any(e => e.Id == id);
+            return _context.ApplicationUser.Any(e => e.Id == id);
         }
     }
 }

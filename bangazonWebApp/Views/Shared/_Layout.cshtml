@@ -30,12 +30,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">bangazonWebApp</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">bangazonWebApp</a>                
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @*search bar and buttons only revealed to authenticated users - contributor Greg Turner*@
                     @if (SignInManager.IsSignedIn(User))
+
     {
                 @*search on left of navbar - contributor Greg Turner*@
                 <div class="navbar-left" style="margin-top:8px;">
@@ -52,6 +53,7 @@
                 <li><a asp-area="" asp-controller="Products" asp-action="Create">Sell a Product</a></li>
                 <li><a asp-area="" asp-controller="Home" asp-action="Home">Shopping Cart</a></li>
 }
+
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

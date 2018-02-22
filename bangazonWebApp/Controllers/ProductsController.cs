@@ -1,3 +1,4 @@
+
 ﻿//Author: Max Wolf
 using System;
 using System.Collections.Generic;
@@ -6,13 +7,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using bangazonWebApp.Models.ProductViewModels;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace bangazonWebApp.Controllers
 {
@@ -29,20 +32,36 @@ namespace bangazonWebApp.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment environment)
+
         {
+            _userManager = userManager;
             _context = context;
             _userManager = userManager;
             _hostingEnvironment = environment;
         }
 
-        // GET: Products
+        // GET: Products - Contributed by Greg Turner
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product.Include(p => p.Category);
-            return View(await applicationDbContext.ToListAsync());
+            //gets the current user
+            ApplicationUser _user = await GetCurrentUserAsync();
+            //only returns the products for the current user that are not status false (inactive) and include the categories
+            List<Product> userProducts = await _context.Product.Where(p => p.User == _user && p.Status).Include(p => p.Category).ToListAsync();
+
+            return View(userProducts);
+        }
+
+        // GET: Products - Contributed by Greg Turner
+        public async Task<IActionResult> Recent()
+        {
+            //only returns the 20 most recently added products that are not status false (inactive)
+            List<Product> recent20 = await _context.Product.Where(p => p.Status).OrderByDescending(p => p.DateCreated).Take(20).ToListAsync();
+
+            return View(recent20);
         }
 
         // GET: Products/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -211,20 +230,60 @@ namespace bangazonWebApp.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
+        // POST: Products/Delete/5 - Contributed by Greg Turner
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Product.Remove(product);
+            //gets the list of orderproducts that contain the product the user wants to delete
+            List<OrderProduct> orderProducts = await _context.OrderProduct.Where(op => op.ProductId == id).ToListAsync();
+            // number of orderproducts that that contain the product the user wants to delete
+            int numOrders = orderProducts.Count();
+
+            //Product that user wants to delete
+            Product product = await _context.Product.SingleOrDefaultAsync(p => p.Id == id);
+
+
+            if (numOrders == 0)
+            {
+                //if there are no orderproducts that contain the product the user wants to delete, delete it from the database
+                _context.Product.Remove(product);
+            }
+            else
+            {
+                //if one or more orderproducts that contain the product the user wants to delete, set the Status property to false
+                product.Status = false;
+
+            }
+
+            //save changes and return to index
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+
         }
 
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> Categories()
+        {
+            var model = new CategorizedProductsViewModel();
+
+            model.CategorizedProducts = await (
+                from c in _context.Category
+                join p in _context.Product
+                on c.Id equals p.CategoryId
+                group new { c, p } by new { c.Id, c.CategoryType } into grouped
+                select new CategorizedProducts
+                {
+                    CategoryId = grouped.Key.Id,
+                    CategoryName = grouped.Key.CategoryType,
+                    ProductCount = grouped.Select(x => x.p.Id).Count(),
+                    Products = grouped.Select(x => x.p).Take(3)
+                }).ToListAsync();
+            return View(model);
         }
     }
 }
