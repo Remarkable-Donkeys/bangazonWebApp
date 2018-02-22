@@ -1,4 +1,4 @@
-﻿// beautifully authored by Jesse Page
+﻿//Author: Max Wolf
 
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,7 @@ namespace bangazonWebApp.Models
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime DateCreated { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.Now;
 
         [Required]
         public ApplicationUser User { get; set; }

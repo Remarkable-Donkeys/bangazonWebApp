@@ -50,7 +50,9 @@
             @Html.DisplayNameFor(model => model.Photo)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Photo)
+            @*for some reason "~/" had to be added before Html.DisplayFor to make sure the path stayed relative on 
+              the details page instead of adding "Products/Details" before "images/filename.jpg"*@
+            <img src="~/@Html.DisplayFor(model => model.Photo)" width="50" height="50">
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.City)
@@ -77,6 +79,8 @@
             @Html.DisplayFor(model => model.Category.CategoryType)
         </dd>
     </dl>
+
+ 
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

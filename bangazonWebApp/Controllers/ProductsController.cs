@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+
+﻿//Author: Max Wolf
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,13 +10,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using bangazonWebApp.Data;
 using bangazonWebApp.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 using bangazonWebApp.Models.ProductViewModels;
 using Microsoft.AspNetCore.Authorization;
+
 
 namespace bangazonWebApp.Controllers
 {
     public class ProductsController : Controller
     {
+
+        private IHostingEnvironment _hostingEnvironment;
+
         private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly ApplicationDbContext _context;
@@ -21,11 +31,13 @@ namespace bangazonWebApp.Controllers
         // This task retrieves the currently authenticated user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment environment)
 
-        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
+            _userManager = userManager;
+            _hostingEnvironment = environment;
         }
 
         // GET: Products - Contributed by Greg Turner
@@ -79,11 +91,49 @@ namespace bangazonWebApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product, IFormFile file)
         {
+            // Remove the user from the model validation because it is
+            // not information posted in the form
+            ModelState.Remove("User");
+
             if (ModelState.IsValid)
             {
+                /*
+                    If all other properties validation, then grab the 
+                    currently authenticated user and assign it to the 
+                    product before adding it to the db _context
+                */
+                var user = await GetCurrentUserAsync();
+
+                product.User = user;
+
+                // TODO: Add the user to the corresponding property of the product
+
+
+                // Adds the img path to the product
+
+                //specify the filepath
+                var upload = Path.Combine(_hostingEnvironment.WebRootPath, "images");
+
+                //store the relative filepath in the database for use as the src of img in view
+                product.Photo = Path.Combine(
+                    "images/",
+                    file.FileName
+                );
+
+                if (file.Length > 0)
+                    {
+                    var filePath = Path.Combine(upload, file.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+            
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -113,9 +163,14 @@ namespace bangazonWebApp.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CategoryId,Status,Price,DateCreated,Quantity,Photo,City,State,DeliverLocal")] Product product)
         {
+            // Remove the user from the model validation because it is
+            // not information posted in the form
+            ModelState.Remove("User");
+
             if (id != product.Id)
             {
                 return NotFound();
@@ -123,6 +178,17 @@ namespace bangazonWebApp.Controllers
 
             if (ModelState.IsValid)
             {
+                /*
+                   If all other properties validation, then grab the 
+                   currently authenticated user and assign it to the 
+                   product before adding it to the db _context
+               */
+                var user = await GetCurrentUserAsync();
+
+                product.User = user;
+
+                // TODO: Add the user to the corresponding property of the product
+
                 try
                 {
                     _context.Update(product);
