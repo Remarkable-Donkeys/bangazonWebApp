@@ -15,6 +15,14 @@ namespace bangazonWebApp.Controllers
             return View();
         }
 
+        // Displays the 20 most recently added products on the page with links to their details - Cntributed by Greg Turner
+        public IActionResult Recent()
+        {
+            ViewData["Message"] = "The 20 most recently added products:";
+
+            return View();
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -33,5 +41,7 @@ namespace bangazonWebApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }

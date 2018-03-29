@@ -1,0 +1,26 @@
+﻿@model bangazonWebApp.Models.ProductViewModels.CategorizedProductsViewModel
+@{
+    ViewData["Title"] = "Product Categories";
+}
+
+<h2 class="top-buffer">Category Types</h2>
+
+<hr />
+
+@foreach (var category in Model.CategorizedProducts)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <h4>@category.CategoryName (@Html.DisplayFor(modelItem => category.ProductCount))</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="list-group col-md-4">
+            @foreach (var product in category.Products)
+            {                
+                <a asp-action="ProductDetails" asp-route-id="@product.Id" class="list-group-item list-group-item-action">@product.Name</a>                
+            }
+        </div>
+    </div>
+}
